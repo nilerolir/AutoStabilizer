@@ -55,9 +55,17 @@ When working with images locally obtained from the Muvicyte live-cell microscopy
   - OutputFolder=C:\Users\Your-user\Documents\Processed
   - Debug=True  
   - Avance=True  
-  - Visor=False  
+  - Visor=False
+  - GaussianAlpha=1.5
+  - MinSize=10
+  - MaxSize=1000
+  - PersistenceThreshold=15
 - Save the text file in the (`/Fiji.app/`) folder
 ---
+## Licencia / License
+El contenido general de este proyecto se encuentra bajo licencia Creative Commons Attribution 3.0 Unported, y el código asociado se encuetra bajo licencia GNU General Public License v3.0.
+The general content of this project is licensed under the Creative Commons Attribution 3.0 Unported license, and the asociated source code is licensed under the GNU General Public License v3.0. 
+
 ## 🤝 **Contributions**
 Contributions are welcome! If you find bugs or have suggestions for improvement, feel free to open an *issue* or submit a *pull request*.
 ---
