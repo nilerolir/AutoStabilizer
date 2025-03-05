@@ -30,7 +30,7 @@ The repository will contain a macro developed for Python in Jython for ImageJ/FI
 2. **Load the macro:**  
    From the menu, select `Plugins > Macros > Run` and choose `AutoStabilicer.ijm.py`.
 3. **Configure the macro:**  
-   Specify the directory containing your input videos and the folder for the processed results. Before running the code, create three folders in Documents or another destination location: `Log`, `To_be_processed`, and `Processed`. Additionally, the images to be processed should be in .tif format; copy all the images to be processed into the `To_be_processed` folder.
+   Specify the directory containing your input videos and the folder for the processed results. Before running the code, create three folders in Documents or another destination location: `Log`, `InputFolder`, and `OutputFolder`. Additionally, the images to be processed should be in .tif format; copy all the images to be processed into the `InputFolder` folder.
 4. **Run the macro:**  
    The script will automatically process all videos, correcting objective movements.
 ---
@@ -42,25 +42,14 @@ This code was developed to work with 6-well multi-well plates, with data extract
 
 The macro will not throw an error if fewer POINT folders are present than those specified in the code. If there are more, it will simply not analyze them unless modifications are made in the code.
 
-When working with images locally obtained from the Muvicyte live-cell microscopy acquisition system, the steps can be reduced to copying all the experiment folders into the `To_be_processed` folder..
+When working with images locally obtained from the Muvicyte live-cell microscopy acquisition system, the steps can be reduced to copying all the experiment folders into the `InputFolder` folder..
 ---
 - **Output:**  
   Stabilized videos ready for advanced analysis with the same organization of imput foldes are in `Processed` folder.
 ---
 ## 📄 **Config.txt**
-- Open a text editor such as `Notepad` and create a text file named `Config.txt`.
-- Define the following parameters without spaces or special characters:
-  - LogFolder=C:\Users\Your-user\Documents\Log  
-  - InputFolder=C:\Users\Your-user\Documents\To_be_processed
-  - OutputFolder=C:\Users\Your-user\Documents\Processed
-  - Debug=True  
-  - Avance=True  
-  - Visor=False
-  - GaussianAlpha=1.5
-  - MinSize=10
-  - MaxSize=1000
-  - PersistenceThreshold=15
-- Save the text file in the (`/Fiji.app/`) folder
+The configuration file Config.txt contains a number of important parameters for script operation. Among these are the locations of the working folders `{InputFolder, LogFolder, OutputFolder}`, `{ReadFolders, CreateFolders}` containing the subfolders `{A01,A02,A03,B01,B02,B03}` in both cases, `{BrightFoldersPoint}` containing the subfolders `{POINT 00001/BRIGHT,POINT 00002/BRIGHT, . ..}` and execution variables `{Debug, Advance, Viewer, Dev}`.
+
 ---
 ## Licencia / License
 El contenido general de este proyecto se encuentra bajo licencia Creative Commons Attribution 3.0 Unported, y el código asociado se encuetra bajo licencia GNU General Public License v3.0.
