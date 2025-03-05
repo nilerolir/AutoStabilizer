@@ -51,7 +51,7 @@ When working with images locally obtained from the Muvicyte live-cell microscopy
 The configuration file Config.txt contains a number of important parameters for script operation. Among these are the locations of the working folders `{InputFolder, LogFolder, OutputFolder}`, `{ReadFolders, CreateFolders}` containing the subfolders `{A01,A02,A03,B01,B02,B03}` in both cases, `{BrightFoldersPoint}` containing the subfolders `{POINT 00001/BRIGHT,POINT 00002/BRIGHT, . ..}` and execution variables `{Debug, Advance, Viewer, Dev}`.
 
 ---
-## Licencia / License
+## License
 El contenido general de este proyecto se encuentra bajo licencia Creative Commons Attribution 3.0 Unported, y el código asociado se encuetra bajo licencia GNU General Public License v3.0.
 The general content of this project is licensed under the Creative Commons Attribution 3.0 Unported license, and the asociated source code is licensed under the GNU General Public License v3.0. 
 
