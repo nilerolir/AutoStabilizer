@@ -62,20 +62,20 @@ The system immediately orients the migration direction of all loaded image stack
 
 ### Figure 1: Path or location of a TIFF image stack folder for a time sequence corresponding to position 1 of well A01 during a prostate cancer cell (PC3) migration experiment.
 
-![A black screen with white text AI-generated content may be incorrect.](media/image1.png)
+![media/image1.png](https://github.com/nilerolir/AutoStabilizer/blob/main/Code/AutoStabilizer-v1.3-/Images/Fig%201.png)
 
 ### Figure 2: Steps to follow for the installation of the Macro-v1.3- code. Decompression of the RAR file (2A). Configuration file `Config.txt` and `Macro-v1.3-.ijm.py` after decompression of the RAR file (2B). ImageJ/FIJI root directory where the `Config.txt` file and the `Macro-v1.3-.ijm.py` file will be copied into the Macros folder (2C).
 
-![A screenshot of a computer AI-generated content may be incorrect.](media/image2.png)
+![media/image2.png](https://github.com/nilerolir/AutoStabilizer/blob/main/Code/AutoStabilizer-v1.3-/Images/Fig%202.png)
 
 ### Figure 3: AutoStabilizer Working Folder. Important folders: To use the code, you need to create a working folder containing the following subfolders with the default names `InputFolder`, `LogFolder`, and `OutputFolder`. It is recommended to work on the local C drive (3A). `InputFolder`: Place the data to be analyzed in the `InputFolder`. In this case, there is a 6-well plate with two rows and three columns (3B). Data registration per well: Each well can contain one or more records to be analyzed. Each position has a set of images to analyze (3C). Image stack per position and per well: For this example, there is a 96-frame image stack named BRIGHT (3D). `LogFolder`: Once the program is executed, a log will be recorded containing the actions performed by the program, such as the start and end of the program, folder creation, and progress percentage, among others (3E). `OutputFolder`: This folder stores the results of the code execution; if the folders are not created, the corresponding folders for the wells in the `InputFolder` will be created (3F). Results in the `OutputFolder`: The result of the code execution is an AVI video corresponding to the position contained in each well. The results follow the same organization as the `InputFolder` (3G).
 
-![A screenshot of a computer program AI-generated content may be incorrect.](media/image3.png)
+![media/image3.png](https://github.com/nilerolir/AutoStabilizer/blob/main/Code/AutoStabilizer-v1.3-/Images/Fig%203.png)
 
 ### Figure 4: Configuration file `Config.txt`: The `Config.txt` configuration file contains a series of important parameters for the script's operation. Among these parameters are the locations of the working subfolders `{InputFolder, LogFolder, OutputFolder}`, as well as `{ReadFolders, CreateFolders}` which contain the subfolders `{A01, A02, A03, B01, B02, B03}`, and `{BrightFoldersPoint}`, which contains the subfolders `{POINT 00001/BRIGHT, POINT 00002/BRIGHT, ....}` and the execution variables: `Debug`, `Progress`, `Viewer`, and `Dev`. Meanwhile, `ENDPOINT` corresponds to the Custom Vision credential, an AI service that, after training for computer vision, discriminates the migration direction of the cell edge in this case of a prostate cancer cell line (PC3).
 
-![A screenshot of a computer AI-generated content may be incorrect.](media/image4.PNG)
+![media/image4.PNG](https://github.com/nilerolir/AutoStabilizer/blob/main/Code/AutoStabilizer-v1.3-/Images/Fig%204.PNG)
 
 ### Figure 5: Execution of the Macro-v1.3- code. Once ImageJ/Fiji is open, select `Plugins > Macros > Run > Macro-v1.3-` (5A). Macro window in the ImageJ/Fiji root directory with the Macro-v1.3- code (5B). Macro execution and editing console in ImageJ/Fiji: The code is built in Jython. Once the code is executed (by pressing Run), a welcome message will appear in the console, naming all the variables registered in the `Config.txt` configuration file dictionary (5C). Text file with the same information printed in the macro editing window, located in the `LogFolder` (5D).
 
-![A screenshot of a computer AI-generated content may be incorrect.](media/image5.png)
+![media/image5.PNG](https://github.com/nilerolir/AutoStabilizer/blob/main/Code/AutoStabilizer-v1.3-/Images/Fig%205.png)
