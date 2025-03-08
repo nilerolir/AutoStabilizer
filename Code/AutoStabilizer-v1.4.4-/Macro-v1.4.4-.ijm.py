@@ -15,25 +15,25 @@ import ij.Prefs                         								# Manejo de las preferencias y c
 import os                               								# Operaciones con rutas, directorios y archivos
 import sys                             								 	# Acceso a funciones y parámetros del sistema
 # Importaciones para realizar conexiones de red
-from java.net import URL, HttpURLConnection  							# Para realizar peticiones a servicios web y APIs
+from java.net import URL  							# Para realizar peticiones a servicios web y APIs
 # Importaciones para operaciones de entrada/salida de datos
 from java.io import BufferedReader, InputStreamReader, DataOutputStream # Manejo de streams para lectura y escritura de datos
 # Importaciones para operaciones de codificación
-import base64                           								# Funciones para codificar y decodificar en base64
 # Importación para manejar datos en formato JSON
 from org.json import JSONObject         								# Creación y análisis de objetos JSON
 # Importaciones para la interfaz gráfica y manejo de diálogos
 import javax.swing.JDialog as JDialog     								# Componente de diálogo para ventanas modales
-import java.awt.Dialog.ModalityType as ModalityType  # Define el tipo de modalidad de los diálogos
+import java.awt.Dialog.ModalityType as ModalityType  					# Define el tipo de modalidad de los diálogos
 # Importación para copiar directorios de forma recursiva
 from shutil import copytree             								# Copia completa de una carpeta a otra
 # Importaciones para seleccionar archivos y directorios mediante un diálogo
 import javax.swing.JFileChooser as JFileChooser  						# Componente para abrir diálogos de selección de archivos o directorios
 import codecs                           								# Manejo de archivos con codificación específica
 # Importaciones adicionales de Swing para construir la GUI
-from javax.swing import JPanel, JButton, JLabel, JTextField, BoxLayout, BorderFactory, SwingConstants, JComboBox, JCheckBox, JScrollPane
+from javax.swing import JPanel, JButton, JLabel, JTextField, BoxLayout, BorderFactory, SwingConstants
+from javax.swing import JComboBox, JCheckBox, JScrollPane
 # Importaciones de AWT para configuraciones de layouts, fuentes y colores
-from java.awt import BorderLayout, FlowLayout, Font, Color, Dimension, GridLayout, Insets
+from java.awt import BorderLayout, FlowLayout, Font, Color, GridLayout, Insets, Dimension
 from javax.swing import SwingUtilities   								# Para asegurar que la GUI se ejecute en el hilo de eventos
 # Importaciones para manejo de eventos en la ventana
 from java.awt.event import WindowAdapter   								# Adaptador para eventos de cierre y otros eventos de ventana
@@ -43,20 +43,27 @@ from java.awt.event import WindowAdapter   								# Adaptador para eventos de c
 # =============================================
 configuracion = {}  # No inicializar aquí (se carga después de la GUI)
 iteracion_avance = 0
+custom_plate_size = None   # Nueva variable global para almacenar el tamaño ingresado en Edit
 
-# =============================================
+# ==========================================================================
 # Interfaz Gráfica
-# =============================================
+# ============================================================================
 def setup_gui():
-	# Llama a _build_gui en el hilo de eventos Swing para garantizar la seguridad de hilos
+	"""
+	 Llama a _build_gui e inicia la construcción de la interfaz gráfica (GUI) 
+	 en el hilo de eventos de Swing para garantizar la seguridad de hilos.
+	"""
 	SwingUtilities.invokeLater(lambda: _build_gui())
 
-# =============================================
+# =====================================================
 # Clase para manejar eventos de ventana
-# =============================================
+# =======================================================
 class MyWindowAdapter(WindowAdapter):
-    def windowClosing(self, e):
-        IJ.log("Programa cerrado")
+	def windowClosing(self, e):
+		"""
+		LLeva un registro del evento de cierre manual de la ventana.
+		"""
+		IJ.log("Programa cerrado")
 
 def _build_gui():
 	"""
@@ -65,7 +72,7 @@ def _build_gui():
 	(selección de directorios, menú desplegable, casillas de verificación y botones).
 	"""
 	frame = JDialog(None, "AutoStabilizer - v1.4.4 - Configuraciones", ModalityType.APPLICATION_MODAL)
-	frame.setSize(700, 350)  # Ventana más ancha y un poco más alta
+	frame.setSize(700, 350)  # Ventana GUI
 	frame.setLayout(BorderLayout())
 	frame.setLocationRelativeTo(None)  # Centrar ventana
 	# Fondo de la ventana: gris claro (rgb(240,240,240))
@@ -82,7 +89,7 @@ def _build_gui():
 	))
 	main_panel.setBackground(Color(255, 255, 255))
 	
-	# Título estilizado
+	# Título
 	lbl_title = JLabel("AutoStabilizer - v1.4.4 - Configuraciones", SwingConstants.CENTER)
 	lbl_title.setFont(Font("Arial", Font.BOLD, 20))
 	lbl_title.setForeground(Color(51, 51, 51))
@@ -99,7 +106,7 @@ def _build_gui():
 	txt_workdir = JTextField(50)
 	btn_workdir = JButton("Seleccionar", actionPerformed=lambda e: _select_folder(txt_workdir))
 	btn_workdir.setFont(Font("Arial", Font.PLAIN, 12))
-	btn_workdir.setMargin(Insets(2, 2, 2, 2))
+	btn_workdir.setPreferredSize(Dimension(80, 25))  # Ajustar tamaño del botón
 	input_panel.add(lbl_workdir)
 	input_panel.add(txt_workdir)
 	input_panel.add(btn_workdir)
@@ -110,7 +117,7 @@ def _build_gui():
 	txt_copyfolder = JTextField(50)
 	btn_copyfolder = JButton("Seleccionar", actionPerformed=lambda e: _select_folder(txt_copyfolder))
 	btn_copyfolder.setFont(Font("Arial", Font.PLAIN, 12))
-	btn_copyfolder.setMargin(Insets(2, 2, 2, 2))
+	btn_copyfolder.setPreferredSize(Dimension(80, 25))  # Ajustar tamaño del botón
 	input_panel.add(lbl_copyfolder)
 	input_panel.add(txt_copyfolder)
 	input_panel.add(btn_copyfolder)
@@ -174,7 +181,7 @@ def _select_folder(text_field):
 def _build_gui_dropdown():
 	"""
 	Crea y retorna un panel que contiene:
-	  - Un menú desplegable para seleccionar el tamaño de la placa de cultivo.
+	  - Un menú desplegable para seleccionar el tamano de la placa de cultivo.
 	  - Un botón "Custom" para abrir una ventana de selección personalizada.
 	  
 	Retorno:
@@ -247,7 +254,7 @@ def _on_accept(frame, work_dir, copy_dir):
 		procesamiento_imagenes(configuracion)
 		debug(configuracion, 'FIN DEL PROGRAMA.', '')
 		
-# =============================================
+# ==============================================
 # Funciones de adaptadores y manejo de ventana
 # =============================================
 
@@ -259,9 +266,9 @@ class MyWindowAdapter(WindowAdapter):
 	def windowClosing(self, e):
 		IJ.log("Programa cerrado")
 
-# =============================================
+# ========================================================
 # Funciones de Configuración y Copia
-# =============================================
+# ========================================================
 def setup_workspace(base_dir):
 	workspace_path = os.path.join(base_dir, "Carpeta de trabajo AutoStabilizer")
 	try:
@@ -375,54 +382,62 @@ def _update_plate_size(plate_size):
 # Nueva función para abrir la ventana personalizada
 
 def _open_custom_window(selected_item):
-	"""
-	Abre una ventana personalizada según la opción seleccionada en el menú desplegable.
-	
-	Parámetros:
-		selected_item (str): Opción seleccionada en el menú desplegable (ej. "1 x 1", "Edit", etc.).
-	"""
-	if selected_item == "Edit":
-		_open_edit_window()  # Abrir ventana de edición personalizada
-	else:
-		# Lógica anterior para otras opciones
-		plate_size = selected_item
-		custom_frame = JDialog(None, "Selección Personalizada", ModalityType.APPLICATION_MODAL)
-		custom_frame.setSize(400, 300)
-		custom_frame.setLayout(BorderLayout())
-		custom_frame.setLocationRelativeTo(None)  # Centrar ventana
+    """
+    Abre una ventana personalizada basada en la opción seleccionada en el menú desplegable.
+    Para cualquier opción, incluida "Edit", se abre la misma ventana de selección personalizada.
+    """
+    # Si se selecciona "Edit", usar el valor ingresado en la ventana Edit
+    if selected_item == "Edit":
+        global custom_plate_size
+        if custom_plate_size is not None:
+            plate_size = custom_plate_size
+        else:
+            IJ.log("Error: No se ha definido un tamano personalizado. Usa la opción Edit para ingresarlo.")
+            return
+    else:
+        plate_size = selected_item
 
-		# Panel principal
-		main_panel = JPanel()
-		main_panel.setLayout(BoxLayout(main_panel, BoxLayout.Y_AXIS))
-		main_panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15))
+    custom_frame = JDialog(None, "Selección Personalizada", ModalityType.APPLICATION_MODAL)
+    custom_frame.setSize(400, 300)
+    custom_frame.setLayout(BorderLayout())
+    custom_frame.setLocationRelativeTo(None)  # Centrar ventana
 
-		# Extraer el número de filas y columnas
-		rows, cols = map(int, plate_size.split(" x "))
+    # Panel principal
+    main_panel = JPanel()
+    main_panel.setLayout(BoxLayout(main_panel, BoxLayout.Y_AXIS))
+    main_panel.setBorder(BorderFactory.createEmptyBorder(15, 15, 15, 15))
+    
+    # Extraer el número de filas y columnas
+    try:
+        rows, cols = map(int, plate_size.split(" x "))
+    except Exception as e:
+        IJ.log("Formato de placa incorrecto: {}".format(plate_size))
+        return
 
-		# Crear casillas para cada posición de la placa
-		checkboxes = []
-		for col in range(cols):
-			row_panel = JPanel(FlowLayout(FlowLayout.LEFT))
-			for row in range(1, rows + 1):
-				folder = "{}{:02d}".format(chr(65 + col), row)
-				chk = JCheckBox(folder)
-				checkboxes.append((folder, chk))
-				row_panel.add(chk)
-			main_panel.add(row_panel)
+    # Crear casillas para cada posición de la placa
+    checkboxes = []
+    for col in range(cols):
+        row_panel = JPanel(FlowLayout(FlowLayout.LEFT))
+        for row in range(1, rows + 1):
+            folder = "{}{:02d}".format(chr(65 + col), row)
+            chk = JCheckBox(folder)
+            checkboxes.append((folder, chk))
+            row_panel.add(chk)
+        main_panel.add(row_panel)
 
-		# Agregar un panel de desplazamiento
-		scroll_pane = JScrollPane(main_panel)
-		scroll_pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED)
-		scroll_pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED)
+    # Agregar un panel de desplazamiento
+    scroll_pane = JScrollPane(main_panel)
+    scroll_pane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED)
+    scroll_pane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED)
 
-		# Botón para guardar la selección
-		btn_save = JButton("Guardar", actionPerformed=lambda e: _save_custom_selection(checkboxes, custom_frame))
-		btn_save.setBackground(Color(70, 130, 180))
-		btn_save.setForeground(Color.WHITE)
+    # Botón para guardar la selección
+    btn_save = JButton("Guardar", actionPerformed=lambda e: _save_custom_selection(checkboxes, custom_frame))
+    btn_save.setBackground(Color(70, 130, 180))
+    btn_save.setForeground(Color(255, 255, 255))
 
-		custom_frame.add(scroll_pane, BorderLayout.CENTER)
-		custom_frame.add(btn_save, BorderLayout.SOUTH)
-		custom_frame.setVisible(True)
+    custom_frame.add(scroll_pane, BorderLayout.CENTER)
+    custom_frame.add(btn_save, BorderLayout.SOUTH)
+    custom_frame.setVisible(True)
 
 # Nueva función para guardar la selección personalizada
 def _save_custom_selection(checkboxes, frame):
@@ -435,7 +450,6 @@ def _save_custom_selection(checkboxes, frame):
 	"""
 	selected_folders = [folder for folder, chk in checkboxes if chk.isSelected()]
 	folders_str = ",".join(selected_folders)
-	
 	try:
 		with open("Config.txt", "r") as f:
 			lines = f.readlines()
@@ -459,7 +473,7 @@ def _save_custom_selection(checkboxes, frame):
 
 def _open_edit_window():
 	"""
-	Abre una ventana para editar manualmente el tamaño de la placa de cultivo.
+	Abre una ventana para editar manualmente el tamano de la placa de cultivo.
 	"""
 	edit_frame = JDialog(None, "Editar Placa de Cultivo", ModalityType.APPLICATION_MODAL)
 	edit_frame.setSize(400, 200)
@@ -504,18 +518,19 @@ def _open_edit_window():
 
 def _save_edit_plate_size(plate_size, frame):
 	"""
-	Guarda el tamaño de la placa ingresado manualmente en el archivo Config.txt.
-	
+	Guarda el tamano de la placa ingresado manualmente en el archivo Config.txt.
 	Parámetros:
-		plate_size (str): Tamaño de la placa ingresado por el usuario (ej. "2 x 16").
+		plate_size (str): Tamano de la placa ingresado por el usuario (ej. "2 x 16").
 		frame (JDialog): Ventana que se cerrará después de guardar.
 	"""
 	try:
+		global custom_plate_size
+		custom_plate_size = plate_size  # Almacenar el tamaño ingresado para usarlo en el botón Custom
 		# Validar el formato del tamaño de la placa
 		if "x" not in plate_size:
 			IJ.log("Error: Formato incorrecto. Usa '2 x 16' como ejemplo.")
 			return
-
+		
 		# Extraer filas y columnas
 		rows, cols = map(int, plate_size.strip().split("x"))
 
@@ -541,10 +556,10 @@ def _save_edit_plate_size(plate_size, frame):
 
 		with open("Config.txt", "w") as f:
 			f.writelines(updated_lines)
-		IJ.log("Config.txt actualizado con tamaño de placa: {}".format(plate_size))
+		IJ.log("Config.txt actualizado con tamano de placa: {}".format(plate_size))
 		frame.dispose()
 	except Exception as e:
-		IJ.log("Error actualizando tamaño de placa: {}".format(str(e)))
+		IJ.log("Error actualizando tamano de placa: {}".format(str(e)))
 
 def _on_accept(frame, work_dir, copy_dir):
 	if not work_dir or not copy_dir:
@@ -582,22 +597,21 @@ def log(config, message):
 	message (str): Mensaje a registrar en el archivo de log.
 
 	Retorno:
-		None. (Efecto colateral: Escribe en el archivo de log.)
+	None. (Efecto colateral: Escribe en el archivo de log.)
 
 	Ejemplo de uso:
 		log(config, "Proceso iniciado correctamente.")
 	"""
-	log_folder = config.get('LogFolder')	
+	log_folder = config.get('LogFolder')
 	
-	log_file_name = "Log_%s.txt" % datetime.now().strftime("%Y_%m_%d")	
 	# Genera un nombre de archivo con la fecha actual en formato Log_AAAA_MM_DD.txt.
-	log_file_path = os.path.join(log_folder, log_file_name) 
-	# Crea la ruta completa del archivo de log combinando la carpeta
+	log_file_name = "Log_%s.txt" % datetime.now().strftime("%Y_%m_%d")
+	log_file_path = os.path.join(log_folder, log_file_name)
+	
 	try:
 		# Crear LogFolder si no existe
 		if not os.path.exists(log_folder):
 			os.makedirs(log_folder)
-
 		with open(log_file_path, 'a') as log_file:
 			log_file.write("%s || %s\n" % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), message))
 	except IOError:
@@ -614,7 +628,7 @@ def valida_datos(config):
 	None. (En caso de ausencia o valor vacío, finaliza el programa con sys.exit(1).)
 
 	Ejemplo de uso:
-	valida_datos(configuracion)
+		valida_datos(configuracion)
 	"""
 	# Definir Claves presentes en Config
 	variables= ['LogFolder','InputFolder','OutputFolder','ReadFolders','CreateFolders','BrightFoldersPoint','Debug','Avance','Visor','Dev','ENDPOINT','PREDICTION_KEY']
@@ -637,7 +651,7 @@ def abre_archivo_config():
 	configuracion = abre_archivo_config()
 	"""
 	config = {}
-	
+
 	# Abrir el archivo de configuración
 	ruta_config = 'Config.txt'
 	try:
@@ -649,7 +663,7 @@ def abre_archivo_config():
 					clave = clave.strip()
 					valor = valor.strip()
 					# Almacenar en el diccionario
-					config[clave] = valor 
+					config[clave] = valor
 			valida_datos(config)
 			#si 'DEV' está habilitado, sobreescribe valores de 'ReadFolders' y 'BrightFoldersPoint'
 			if config.get('Dev') == 'True':
@@ -680,14 +694,13 @@ def inicio_programa(configuracion):
 	print('%s' % separador)
 	print('Inicio del programa: %s' % datetime.now())
 	log(configuracion, 'Inicio del programa.')
-	
 	if configuracion.get('Debug') == 'True':
 		print('%s' % ('************** MODO DEBUG ACTIVADO ***************'))
 		print('Configuraciones Actuales:\n')
 		for clave, valor in configuracion.items():
 			print('%-25s: %s' % (clave, valor))
 	print('%s\n\n' % separador)
-	
+
 def creacion_carpetas_destino(configuracion): 
 	"""
 	Crea las carpetas de salida especificadas en la configuración si no existen.
@@ -733,7 +746,7 @@ def debug(configuracion,mensaje,variable):
 	if configuracion.get('Debug') == 'True':
 		print('%s || %s %s' % (datetime.now().strftime('%Y-%m-%d %H:%M:%S'), mensaje, variable))
 	log(configuracion, mensaje + variable)
-	 	
+
 def avance(folderNames,BrightNames):
 	"""
 	Incrementa un contador global para indicar el progreso del procesamiento y registra el porcentaje completado.
@@ -749,12 +762,12 @@ def avance(folderNames,BrightNames):
 	avance(folderNames, BrightNames)
 	"""
 	global iteracion_avance
-	if configuracion.get('Avance') == 'True':	
+	if configuracion.get('Avance') == 'True':
 		iteracion_avance = iteracion_avance + 1
 		porcentaje = float(iteracion_avance) / (len(folderNames)*len(BrightNames)) * 100
 		mensaje = '%.2f%% completado.' % porcentaje
 		debug(configuracion, mensaje, '')
-		
+
 def orientacion(configuracion,NewDire):
 	"""
 	Verifica la orientación de la primera imagen en la carpeta y decide si se requiere un cambio de orientación.
@@ -776,7 +789,7 @@ def orientacion(configuracion,NewDire):
 	IJ.saveAs(imagen, 'JPG', ruta_jpg)
 	imagen.close()
 	cambiar_orientacion = conexion_custom_vision(configuracion,ruta_jpg)
-	return cambiar_orientacion	
+	return cambiar_orientacion
 		
 def conexion_custom_vision(configuracion,ruta_jpg):
 	"""
@@ -794,7 +807,6 @@ def conexion_custom_vision(configuracion,ruta_jpg):
 	Ejemplo de uso:
 	flip_necesario = conexion_custom_vision(configuracion, "C:/ruta/imagen.jpg")
 	"""
-
 	# Configuración de la API
 	ENDPOINT = configuracion.get('ENDPOINT')
 	PREDICTION_KEY = configuracion.get('PREDICTION_KEY')
@@ -803,7 +815,8 @@ def conexion_custom_vision(configuracion,ruta_jpg):
 	# Verificar si la imagen existe
 	if not os.path.exists(IMAGE_PATH):
 		debug(configuracion, 'La imagen de entrada no existe: ', IMAGE_PATH)  # Fix: use comma to separate message and variable.
-	
+		return None
+
 	# Leer la imagen en binario
 	with open(IMAGE_PATH, "rb") as image_file:
 		image_data = image_file.read()
@@ -821,7 +834,7 @@ def conexion_custom_vision(configuracion,ruta_jpg):
 	output_stream.write(image_data)
 	output_stream.flush()
 	output_stream.close()
-
+	
 	# Leer la respuesta de la API
 	response_code = connection.getResponseCode()
 	if response_code == 200:
@@ -843,7 +856,7 @@ def conexion_custom_vision(configuracion,ruta_jpg):
 			prediction = predictions.getJSONObject(i)
 			tag_name = prediction.getString("tagName")
 			probability = prediction.getDouble("probability")
-			if tag_name == 'Derecha' and probability > 0.7:	
+			if tag_name == 'Derecha' and probability > 0.7:
 				debug(configuracion, 'Imagen requiere cambio de orientacion debido a que se encuentra orientada de derecha a izquierda. Probabilidad:', "{0:.2f}%".format(probability * 100))
 				return True
 			elif tag_name == 'Izquierda' and probability > 0.7:
@@ -851,7 +864,7 @@ def conexion_custom_vision(configuracion,ruta_jpg):
 				return False
 			else:
 				debug(configuracion, 'Orientacion no concluyente. Probabilidad:', "{0:.2f}%".format(probability * 100))
-
+		return None
 	else:
 		debug(configuracion, 'Error de conexion a custom vision. Codigo de error:', str(response_code))
 		reader = BufferedReader(InputStreamReader(connection.getErrorStream()))
@@ -861,7 +874,8 @@ def conexion_custom_vision(configuracion,ruta_jpg):
 			error_response.append(line)
 			line = reader.readLine()
 		reader.close()
-		debug(configuracion, 'Tipo de error', str(error_response))		
+		debug(configuracion, 'Tipo de error', str(error_response))
+		return None
 
 def cambio_orientacion(imp):
 	"""
@@ -881,7 +895,7 @@ def cambio_orientacion(imp):
 		frame = stack.getProcessor(i)
 		frame.flipHorizontal()  # Cambiar orientación horizontalmente
 	debug(configuracion, "Cambio de orientacion realizado en el video.", "")
-	
+
 def procesamiento_imagenes(configuracion):
 	inputFolder = configuracion.get('InputFolder')
 	if inputFolder:
@@ -914,8 +928,6 @@ def procesamiento_imagenes(configuracion):
 							cambio_orientacion(imp)
 						IJ.run(imp, "AVI... ", "compression=None frame=7 save=[" + output_path + "]")
 						debug(configuracion, 'Guardado de archivo finalizado: ', NombreVideo)
-						if configuracion.get('Visor') == 'True':
-							imp.close()
 					else:
 						mensaje_error = 'ERROR: No se pudo abrir la secuencia de imagenes de la carpeta %s' % NewDire
 						debug(configuracion, mensaje_error, '')
@@ -924,16 +936,13 @@ def procesamiento_imagenes(configuracion):
 					debug(configuracion, mensaje_no_dir, '')
 				avance(folderNames, BrightNames)
 
-
 # =============================================
 # Ejecución Principal
 # =============================================
+# Solo esto se ejecuta al inicio
 if __name__ == "__main__":
-	setup_gui()  # Solo esto se ejecuta al inicio
+	setup_gui()
 
 # =============================================
 # Fin del Programa
 # =============================================
-
-
-
