@@ -379,8 +379,6 @@ def _update_plate_size(plate_size):
 	except Exception as e:
 		IJ.log("Error actualizando tamano de placa: {}".format(str(e)))
 
-# Nueva función para abrir la ventana personalizada
-
 def _open_custom_window(selected_item):
     """
     Abre una ventana personalizada basada en la opción seleccionada en el menú desplegable.
@@ -439,7 +437,6 @@ def _open_custom_window(selected_item):
     custom_frame.add(btn_save, BorderLayout.SOUTH)
     custom_frame.setVisible(True)
 
-# Nueva función para guardar la selección personalizada
 def _save_custom_selection(checkboxes, frame):
 	"""
 	Guarda la selección personalizada en el archivo Config.txt.
@@ -468,8 +465,6 @@ def _save_custom_selection(checkboxes, frame):
 		frame.dispose()
 	except Exception as e:
 		IJ.log("Error guardando selección personalizada: {}".format(str(e)))
-
-# Después de la función _save_custom_selection, agrega lo siguiente:
 
 def _open_edit_window():
 	"""
