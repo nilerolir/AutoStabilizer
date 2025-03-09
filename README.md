@@ -1,6 +1,52 @@
-# AutoStabilizer
-The repository will contain a macro developed for Python in Jython for ImageJ/FIJI that corrects unwanted movements in live-cell microscopy videos. This processing facilitates advanced analyses, such as particle image velocimetry (PIV). The repository will include the macro, detailed documentation, and usage examples.
-# Image Stabilization Macro for Microscopy Videos in ImageJ/FIJI
+# 1. AutoStabilizer
+The repository will contain a macro developed for Python in Jython for ImageJ/FIJI that aims to streamline the processing of microscopy images for cell migration experiments, obtained from the Cell culture Muvicyte system. The macro allows receiving images from a folder called `InputFolder`, where image stacks are stored with the following structure: `Well (A01)\POINT (0001)\Bright (Stack)\images`. This structure supports a wide configuration of wells, points of interest, and their corresponding microscopy image stacks. The system immediately orients the migration direction of all loaded image stacks from left to right using the `Custom Vision -- Azure -- Microsoft` system. Additionally, it processes the image stacks in the Bright folder, converting them into `AVI` format videos. This processing facilitates advanced analyses, such as particle image velocimetry (PIV). The repository will include the macro, detailed documentation, and usage examples.
+
+## 2. ImageJ/Fiji Software Installation
+
+1. Go to [https://imagej.net/software/fiji/downloads](https://imagej.net/software/fiji/downloads) and download the FIJI version for your operating system.
+
+2. Alternatively, go to [https://imagej.net/ij/download.html](https://imagej.net/ij/download.html) and download the ImageJ version for your operating system. However, the Macro-v1.3- is designed for FIJI. The steps are very similar, but there may be inaccuracies.
+
+3. Extract the downloaded .zip archive:
+   - **Windows:** Right-click > "Extract All..."
+   - **Mac OS:** Double-click the .zip file
+   - **Linux:** Right-click > "Extract Here."
+
+4. No installation is required for the downloaded file, but it can be used as is. Place it on your computer as follows:
+   - **Windows or Linux:** Place the extracted directory "fiji-<win64, win32, linux64, or linux32 (depending on your installation)>" in any folder where you have read and write permissions (e.g., your Desktop or Documents folder).
+   - **Mac OS:** Place the extracted directory "fiji-macosx" in your Documents folder (do not place it in the "Applications" folder to avoid issues caused by Mac OS's "path randomization").
+
+5. Run FIJI:
+   - **Windows:** Navigate to the "fiji-win<64 or 32>" directory, then enter the "Fiji.app" directory and double-click the "ImageJ-win<64 or 32>.exe" file.
+   - **Mac OS:** Navigate to the "fiji-macosx" directory and double-click the "FIJI.app" icon.
+   - **Linux:** Navigate to the "fiji-linux64" directory, then enter the "Fiji.app" directory and double-click the "ImageJ-linux64" file.
+
+## 3. Macro-v1.3 Installation
+
+1. Download the macro "Macro-v1.4.4" from this repository.   
+
+2. Extract the files `Config.txt` and `AutoStabilizer_v1.4.4_.ijm.py`, figure 1A. Then, copy the `Config.txt` file to the ImageJ/Fiji root directory as shown in figure 1B and the `AutoStabilizer_1.4.4_ijm.py` file to the Macros folder in the ImageJ/Fiji directory as shown in Figure 1C.
+   
+3. To execute this code follow the steps below: Once ImageJ/Fiji is open select Plugins > Macros > Run > AutoStabilizer_v1.4.4_EN_.ijm.py as shown in figure 2.
+
+4. Once the code is executed, a configuration window will open as shown in figure 3. 
+
+In `Working directory` you can select the location of your working directory, which by default will be called `Work folder AutoStabilizer` with three subfolders `LogFolder, InputFolder, OutputFolder` as shown in Figure 4A. Also, in `Folder to copy` you can select some folder with many microscopy images stored in the form: `Pocillo (A01)\POINT (0001)\Brigth (Stack)\Images` as shown in figure 4B, C, D.
+
+
+
+Translated with DeepL.com (free version)
+
+5. Before running the code, create a working folder in Documents or another target location, for example, `AutoStabilizer Working Folder`. Inside this folder, create the following subfolders: `Log`, `InputFolder`, and `OutputFolder` as shown in Figure 3A. Copy images into the `InputFolder` as shown in Figure 3B.
+
+6. Copy the paths of the `Log`, `InputFolder`, and `OutputFolder` folders into the `Config.txt` file as shown in Figure 4.
+
+7. In ImageJ/Fiji, follow these steps: Once ImageJ/Fiji is open, select `Plugins > Macros > Run > Macro-v1.3-` as shown in Figure 5A,B.
+
+8. You can view the macro's execution in real-time from the ImageJ/Fiji macro editor console, as shown in Figure 5C. To do this, follow these steps: Once ImageJ/Fiji is open, select `Plugins > Macros > Edit > Macro-v1.3-`.
+
+
+
 ---
 ## 🚀 **Key Features**
 - **Automatic motion correction:** Leverages ImageJ plugins like `TurboReg` and `MultiStackReg`.
